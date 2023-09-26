@@ -18,6 +18,9 @@ document.addEventListener("DOMContentLoaded", function() {
       historyBtn.innerHTML = `
   <button class="location-btn">${item}</button>
   `;
+      historyBtn.addEventListener('click', () => {
+        getCityCoordinates(item)
+      })
       btnList.appendChild(historyBtn);
     });
 
@@ -29,8 +32,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
-const getCityCoordinates = () => {
-  const cityName = cityInput.value.trim();
+const getCityCoordinates = (item) => {
+  // const cityName = cityInput.value.trim();
+//  const cityName = item ? item : cityInput.value.trim();
+const cityName = item
+
+console.log(cityName)
+
   if (!cityName) return;
   const GEOCODING_API_URL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${API_KEY}`;
 
@@ -46,21 +54,29 @@ const getCityCoordinates = () => {
     });
 };
 
-searchButton.addEventListener("click", getCityCoordinates);
+searchButton.addEventListener("click", (e) => {
+  getCityCoordinates(cityInput.value)
+});
 
 const getWeatherDetails = (cityName, lat, lon) => {
   const lsRecent = localStorage.getItem("recentSearch");
 
   if (lsRecent) {
     // This code runs if the app found old entries
-    updatedString = lsRecent + `,${cityName}`;
-    localStorage.setItem("recentSearch", `${updatedString}`);
+    const stringArr = lsRecent.split(",");
+    
+if (!stringArr.includes(cityName)) {
+  updatedString = lsRecent + `,${cityName}`;
+  localStorage.setItem("recentSearch", `${updatedString}`);
 
-    const historyBtn = document.createElement("div");
-    historyBtn.innerHTML = `
+  const historyBtn = document.createElement("div");
+  historyBtn.innerHTML = `
 <button class="location-btn">${cityName}</button>
 `;
-    btnList.appendChild(historyBtn);
+  
+  btnList.appendChild(historyBtn);
+
+}
 
 
 
