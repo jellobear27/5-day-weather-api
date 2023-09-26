@@ -87,6 +87,9 @@ if (!stringArr.includes(cityName)) {
     historyBtn.innerHTML = `
 <button class="location-btn">${cityName}</button>
 `;
+historyBtn.addEventListener('click', () => {
+  getWeatherDetails(cityName)
+})
     btnList.appendChild(historyBtn);
   }
 
