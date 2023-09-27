@@ -19,7 +19,7 @@ const fiveDayCont = document.querySelector('.days-forecast')
 
 document.addEventListener("DOMContentLoaded", function () {
   // Runs when page loads
-  currentIco.classList.add("hidden")
+  currentIco.classList.add("hidden") 
   fiveDayCont.classList.add("hidden")
 
 
@@ -104,12 +104,14 @@ const getWeatherDetails = (cityName, lat, lon) => {
     btnList.appendChild(historyBtn);
   }
 
-  const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+  const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&cnt=35`;
 
   fetch(WEATHER_API_URL)
     .then((res) => res.json())
     .then((data) => {
+      
       const uniqueForecastDays = [];
+
       const fiveDaysForecast = data.list.filter((forecast) => {
         const forecastDate = new Date(forecast.dt_txt).getDate();
         if (!uniqueForecastDays.includes(forecastDate)) {
@@ -118,8 +120,9 @@ const getWeatherDetails = (cityName, lat, lon) => {
         }
         return false;
       });
-      //Update current info
 
+
+      //Update current info
       currentCity.innerText = data.city.name
       currentTemp.innerText = `Temperature: ${data.list[0].main.temp} C`
       currentWind.innerText = `Wind Speed: ${data.list[0].wind.speed} M/S`
