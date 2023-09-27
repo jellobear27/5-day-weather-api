@@ -16,24 +16,23 @@
         <button class="search-btn">Search</button>
         <div class="separator"></div>
         <div class="btn-list">
-          <!-- <button class="location-btn">Use Current Location</button> -->
         </div>
       </div>
       <div class="weather-data">
         <div class="current-weather">
           <div class="details">
-            <h2>London (2023-06-19)</h2>
-            <h4>Temperature: 19.10℃</h4>
-            <h4>Wind: 4.31 M/S</h4>
-            <h4>Humidity: 79%</h4>
+            <h2 id="current-city">Search for a city...</h2>
+            <h4 id="current-temp"></h4>
+            <h4 id="current-wind"></h4>
+            <h4 id="current-humidity"></h4>
           </div>
           <div class="icon">
-            <img src="https://openweathermap.org./img/wn/10d@4x.png" alt="weather-icon"  />
-            <h4>Moderate Rain</h4>
+            <img id="current-icon" src="" alt="weather-icon"  />
+            <h4 id="current-main"></h4>
           </div>
         </div>
-        <div class="days-forcast">
-          <h2>5-Day Forcast</h2>
+        <div class="days-forecast">
+          <h2>5-Day Forecast</h2>
           <ul class="weather-cards">
             <li class="card">
               <h3>(_____)</h3>

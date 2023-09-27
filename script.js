@@ -1,14 +1,29 @@
+const API_KEY = "bfdff01e65c3de79d7d0a405c9c23585";
+
+// New Search Selectors
 const cityInput = document.querySelector(".city-input");
 const searchButton = document.querySelector(".search-btn");
+
+//History Button Selectors
 const weatherList = document.querySelector(".weather-cards");
 const btnList = document.querySelector(".btn-list");
 
-const API_KEY = "bfdff01e65c3de79d7d0a405c9c23585";
+//Current City Banner Selectors
+const currentCity = document.querySelector("#current-city");
+const currentTemp = document.querySelector("#current-temp");
+const currentWind = document.querySelector("#current-wind");
+const currentHum = document.querySelector("#current-humidity");
+const currentMain = document.querySelector("#current-main")
+const currentIco = document.querySelector("#current-icon")
+const fiveDayCont = document.querySelector('.days-forecast')
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   // Runs when page loads
-  const lsRecent = localStorage.getItem("recentSearch");
+  currentIco.classList.add("hidden")
+  fiveDayCont.classList.add("hidden")
 
+
+  const lsRecent = localStorage.getItem("recentSearch");
   if (lsRecent) {
     // This code runs if the app found old entries
     const stringArr = lsRecent.split(",");
@@ -18,29 +33,27 @@ document.addEventListener("DOMContentLoaded", function() {
       historyBtn.innerHTML = `
   <button class="location-btn">${item}</button>
   `;
-      historyBtn.addEventListener('click', () => {
-        getCityCoordinates(item)
-      })
+      historyBtn.addEventListener("click", () => {
+        getCityCoordinates(item);
+      });
       btnList.appendChild(historyBtn);
     });
-
-
   } else {
     //This code runs if theres no entries yet
-
   }
-
 });
 
 const getCityCoordinates = (item) => {
   // const cityName = cityInput.value.trim();
-//  const cityName = item ? item : cityInput.value.trim();
-const cityName = item
+  //  const cityName = item ? item : cityInput.value.trim();
+  const cityName = item;
 
-console.log(cityName)
+  console.log(cityName);
 
   if (!cityName) return;
   const GEOCODING_API_URL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${API_KEY}`;
+
+  console.log(GEOCODING_API_URL)
 
   fetch(GEOCODING_API_URL)
     .then((res) => res.json())
@@ -55,7 +68,7 @@ console.log(cityName)
 };
 
 searchButton.addEventListener("click", (e) => {
-  getCityCoordinates(cityInput.value)
+  getCityCoordinates(cityInput.value);
 });
 
 const getWeatherDetails = (cityName, lat, lon) => {
@@ -64,22 +77,20 @@ const getWeatherDetails = (cityName, lat, lon) => {
   if (lsRecent) {
     // This code runs if the app found old entries
     const stringArr = lsRecent.split(",");
-    
-if (!stringArr.includes(cityName)) {
-  updatedString = lsRecent + `,${cityName}`;
-  localStorage.setItem("recentSearch", `${updatedString}`);
 
-  const historyBtn = document.createElement("div");
-  historyBtn.innerHTML = `
+    if (!stringArr.includes(cityName)) {
+      updatedString = lsRecent + `,${cityName}`;
+      localStorage.setItem("recentSearch", `${updatedString}`);
+
+      const historyBtn = document.createElement("div");
+      historyBtn.innerHTML = `
 <button class="location-btn">${cityName}</button>
 `;
-  historyBtn.addEventListener('click', () => {
-    getWeatherDetails(cityName)
-  })
-  btnList.appendChild(historyBtn);
-
-}
-
+      historyBtn.addEventListener("click", () => {
+        getCityCoordinates(cityName);
+      });
+      btnList.appendChild(historyBtn);
+    }
   } else {
     //This code runs if theres no entries yet
     localStorage.setItem("recentSearch", `${cityName}`);
@@ -87,9 +98,9 @@ if (!stringArr.includes(cityName)) {
     historyBtn.innerHTML = `
 <button class="location-btn">${cityName}</button>
 `;
-historyBtn.addEventListener('click', () => {
-  getWeatherDetails(cityName)
-})
+    historyBtn.addEventListener("click", () => {
+      getCityCoordinates(cityName);
+    });
     btnList.appendChild(historyBtn);
   }
 
@@ -107,9 +118,18 @@ historyBtn.addEventListener('click', () => {
         }
         return false;
       });
+      //Update current info
+
+      currentCity.innerText = data.city.name
+      currentTemp.innerText = `Temperature: ${data.list[0].main.temp} C`
+      currentWind.innerText = `Wind Speed: ${data.list[0].wind.speed} M/S`
+      currentHum.innerText = `Humidity: ${data.list[0].main.humidity} %`
+      currentMain.innerText = `${data.list[0].weather[0].main}`
+      currentIco.src = `https://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png`
+      currentIco.classList.remove("hidden")
+      fiveDayCont.classList.remove("hidden")
       // Clear previous weather cards before adding new ones
       weatherList.innerHTML = "";
-
       fiveDaysForecast.forEach((weatherItem) => {
         createWeatherCard(weatherItem);
       });
